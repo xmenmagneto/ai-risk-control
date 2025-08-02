@@ -1,8 +1,8 @@
 {
-  "ip": "10.0.0.1",
+  "ip": "127.0.0.1",
   "userAgent": "curl/7.68.0",
-  "userId": "999",
-  "productId": 123,
-  "timestamp": 1691000000000,
-  "requestCountLastMinute": 20
+  "userId": "123",
+  "productId": 3,
+  "timestamp": 1723000000000,
+  "requestCountLastMinute": 1
 }
