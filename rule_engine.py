@@ -1,9 +1,24 @@
-suspicious_keywords = ["curl", "python", "bot", "scrapy", "java"]
+# rule_engine.py
 
-def rule_decision(features):
-    if features.request_count_last_minute > 10:
-        return "BLOCK"
-    ua = features.user_agent.lower() if features.user_agent else ""
-    if any(k in ua for k in suspicious_keywords):
-        return "BLOCK"
-    return "ALLOW"
+class RuleEngine:
+    def __init__(self):
+        self.rules = [
+            self.rule_bot_user_agent,
+            self.rule_high_freq_access
+        ]
+
+    def rule_bot_user_agent(self, row):
+        ua = row.get('userAgent', '').lower()
+        return any(bot in ua for bot in ['curl', 'bot', 'python', 'java'])
+
+    def rule_high_freq_access(self, row):
+        return row.get('requestCountLastMinute', 0) > 20
+
+
+    def evaluate(self, row: dict):
+        hits = []
+        for rule in self.rules:
+            if rule(row):
+                hits.append(rule.__name__)
+        decision = "BLOCK" if hits else "ALLOW"
+        return decision, hits

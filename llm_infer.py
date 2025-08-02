@@ -46,3 +46,20 @@ def predict(input_df: pd.DataFrame):
     # 第一条是机器人（is_bot_ua=1），硬判决为 "BLOCK"，概率设为1.0
     # 第二条是正常UA，模型预测概率为比如 [0.7, 0.3] (ALLOW 70%，BLOCK 30%)
     return decisions, probs_list
+
+def fuse_decision(rule_decision: str, model_decision: str, mode: str = "fuse") -> str:
+    """
+    根据融合策略返回最终判定结果。
+    mode:
+      - "rule_first": 规则优先
+      - "model_first": 模型优先
+      - "fuse": 二者一致才 ALLOW，否则 BLOCK
+    """
+    if mode == "rule_first":
+        return rule_decision if rule_decision == "BLOCK" else model_decision
+    elif mode == "model_first":
+        return model_decision if model_decision == "BLOCK" else rule_decision
+    elif mode == "fuse":
+        return "ALLOW" if rule_decision == model_decision == "ALLOW" else "BLOCK"
+    else:
+        raise ValueError(f"Unknown fusion mode: {mode}")
