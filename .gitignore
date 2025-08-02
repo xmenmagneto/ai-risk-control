@@ -18,3 +18,6 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Ignore model files
+model.pkl
